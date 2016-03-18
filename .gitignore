@@ -3,4 +3,5 @@
 mvnw
 *.iml
 target/*
+*/target/*
 !.gitignore
