@@ -1,4 +1,4 @@
-package pl.januszemotoryzacji.service;
+package pl.januszemotoryzacji.service.dto;
 
 
 import lombok.Data;
@@ -9,5 +9,5 @@ import java.util.List;
 public class AllegroOffersResponse {
 
     private int count;
-    private List<AllegroOffer> offers;
+    private List<AllegroOffersList> offers;
 }
