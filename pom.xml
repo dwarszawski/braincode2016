@@ -17,6 +17,17 @@
         <java.version>1.8</java.version>
     </properties>
 
+   <dependencyManagement>
+       <dependencies>
+           <dependency>
+               <groupId>org.projectlombok</groupId>
+               <artifactId>lombok</artifactId>
+               <version>1.16.6</version>
+           </dependency>
+       </dependencies>
+   </dependencyManagement>
+
+
     <modules>
         <module>app</module>
         <module>components</module>
