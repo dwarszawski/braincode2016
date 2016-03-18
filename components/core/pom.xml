@@ -15,6 +15,12 @@
     <name>carfilter-components-core</name>
     <description><!-- TODO: add description --></description>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
 </project>
