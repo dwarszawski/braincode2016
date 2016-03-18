@@ -2,3 +2,5 @@
 .mvn
 mvnw
 *.iml
+target/*
+!.gitignore
