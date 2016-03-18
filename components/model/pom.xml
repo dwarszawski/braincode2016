@@ -11,6 +11,7 @@
 
     <artifactId>carfilter-components-model</artifactId>
     <packaging>jar</packaging>
+    <version>0.0.1-SNAPSHOT</version>
 
     <name>carfilter-components-model</name>
     <description><!-- TODO: add description --></description>
@@ -22,5 +23,13 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

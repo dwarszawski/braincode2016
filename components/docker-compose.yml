@@ -1,0 +1,9 @@
+db:
+  image: mysql:5.6
+  environment:
+    -  MYSQL_ROOT_PASSWORD=root
+    - MYSQL_PASSWORD=password
+    - MYSQL_USER=user
+    - MYSQL_DATABASE=app
+  expose:
+    - 3306

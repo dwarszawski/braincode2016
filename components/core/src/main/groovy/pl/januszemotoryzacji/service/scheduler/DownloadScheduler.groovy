@@ -1,5 +1,6 @@
 package pl.januszemotoryzacji.service.scheduler
 
+import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import pl.januszemotoryzacji.service.scheduler.task.FetchOfferDataTask
 
@@ -8,6 +9,7 @@ import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
 @Slf4j
+@CompileStatic
 class DownloadScheduler {
     public static void schedule(List<Long> offers) {
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(10)

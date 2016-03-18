@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-public class CarAuction {
+public class CarOffer {
 
     private long identity;
     private int version;
