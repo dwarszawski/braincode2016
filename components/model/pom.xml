@@ -5,21 +5,22 @@
 
     <parent>
         <groupId>pl.janusze-motoryzacji</groupId>
-        <artifactId>carfilter</artifactId>
+        <artifactId>carfilter-components</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>carfilter-components</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>carfilter-components-model</artifactId>
+    <packaging>jar</packaging>
 
-    <name>carfilter-components</name>
+    <name>carfilter-components-model</name>
     <description><!-- TODO: add description --></description>
 
-
-    <modules>
-        <module>core</module>
-        <module>model</module>
-    </modules>
-
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
 </project>
