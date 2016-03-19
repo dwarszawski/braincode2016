@@ -21,7 +21,7 @@ public class OffersDownloadService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OffersDownloadService.class);
 
-    private ExecutorService executorService = Executors.newFixedThreadPool(100);
+    private ExecutorService executorService = Executors.newFixedThreadPool(10);
 
     private String accessToken;
     private OffersIdResolver offersIdResolver;

@@ -24,7 +24,7 @@ public class ApplicationConfiguration {
     public OffersIdResolver offersIdResolver() {
         OffersIdResolver offersIdResolver = new OffersIdResolver();
         offersIdResolver.setAccessToken(ACCESS_TOKEN);
-        offersIdResolver.setExecutor(Executors.newFixedThreadPool(100));
+        offersIdResolver.setExecutor(Executors.newFixedThreadPool(10));
         return offersIdResolver;
     }
 
