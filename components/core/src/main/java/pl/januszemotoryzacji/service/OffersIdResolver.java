@@ -3,6 +3,7 @@ package pl.januszemotoryzacji.service;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
@@ -10,24 +11,23 @@ import pl.januszemotoryzacji.service.dto.AllegroOffersList;
 import pl.januszemotoryzacji.service.dto.AllegroOffersListRequest;
 import pl.januszemotoryzacji.service.dto.AllegroOffersResponse;
 
+import java.rmi.server.RemoteCall;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class OffersIdResolver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OffersIdResolver.class);
+
+    @Setter
     private ExecutorService executor;
+    @Setter
     private String accessToken;
-
-
-    public OffersIdResolver(ExecutorService executor, String accessToken) {
-        this.executor = executor;
-        this.accessToken = accessToken;
-    }
 
     public List<Long> loadOfferIds(int categoryId) {
 
@@ -45,9 +45,11 @@ public class OffersIdResolver {
             LOGGER.info("Total count : {}", count);
 
             List<Future<AllegroOffersResponse>> futures = new ArrayList<Future<AllegroOffersResponse>>();
-            for (int i = 0; i < 20000; i += 1000) {
+            for (int i = 0; i < count; i += 1000) {
                 futures.add(executor.submit(new RequestCallable(new RestTemplate(), categoryId, accessToken, i, 1000)));
             }
+
+            LOGGER.info("Futures submitted");
 
             AtomicInteger loaded = new AtomicInteger();
             for (Future<AllegroOffersResponse> future : futures) {
@@ -57,7 +59,6 @@ public class OffersIdResolver {
                     loaded.incrementAndGet();
                 }
                 LOGGER.info("Loadded {} ids", loaded.get());
-
             }
 
 
@@ -72,6 +73,8 @@ public class OffersIdResolver {
     @AllArgsConstructor
     private static class RequestCallable implements Callable<AllegroOffersResponse> {
 
+        private static final Logger LOGGER = LoggerFactory.getLogger(RequestCallable.class);
+
         private RestTemplate restTemplate;
         private int categoryId;
         private String accessToken;
@@ -79,10 +82,15 @@ public class OffersIdResolver {
         private int limit;
 
         public AllegroOffersResponse call() throws Exception {
-            return restTemplate.postForEntity("https://api.natelefon.pl/v2/allegro/offers?" +
-                            "access_token=" + accessToken,
-                    new AllegroOffersListRequest(categoryId, accessToken, offset, limit),
-                    AllegroOffersResponse.class).getBody();
+            try {
+                return restTemplate.postForEntity("https://api.natelefon.pl/v2/allegro/offers?" +
+                                "access_token=" + accessToken,
+                        new AllegroOffersListRequest(categoryId, accessToken, offset, limit),
+                        AllegroOffersResponse.class).getBody();
+            } catch (Exception ex) {
+                LOGGER.error(ex.getMessage(), ex);
+                return new AllegroOffersResponse();
+            }
         }
     }
 }

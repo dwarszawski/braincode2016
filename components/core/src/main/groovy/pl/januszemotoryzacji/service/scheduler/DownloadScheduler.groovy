@@ -9,7 +9,6 @@ import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
 @Slf4j
-@CompileStatic
 class DownloadScheduler {
     public static void schedule(List<Long> offers) {
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(10)

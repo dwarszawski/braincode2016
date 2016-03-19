@@ -1,11 +1,15 @@
 package pl.januszemotoryzacji.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
 import pl.januszemotoryzacji.service.dto.AllegroCarOffer;
 
 import java.util.concurrent.Callable;
 
 public class OfferGrabber implements Callable<AllegroCarOffer> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(OfferGrabber.class);
 
     private RestTemplate restTemplate;
     private long offerId;
@@ -18,8 +22,13 @@ public class OfferGrabber implements Callable<AllegroCarOffer> {
     }
 
     public AllegroCarOffer call() throws Exception {
-        return restTemplate.getForEntity("https://api.natelefon.pl/v2/allegro/offers/" + offerId +
-                "?" +
-                "access_token=" + accessToken, AllegroCarOffer.class).getBody();
+        try {
+            return restTemplate.getForEntity("https://api.natelefon.pl/v2/allegro/offers/" + offerId +
+                    "?" +
+                    "access_token=" + accessToken, AllegroCarOffer.class).getBody();
+        } catch (Exception ex) {
+            LOGGER.error(ex.getMessage(), ex);
+            return null;
+        }
     }
 }
