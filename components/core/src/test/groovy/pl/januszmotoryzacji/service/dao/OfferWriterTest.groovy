@@ -11,7 +11,7 @@ import java.time.temporal.ChronoUnit
 
 class OfferWriterTest extends Specification {
 
-    public static final String H2_URL = 'jdbc:h2:mem:'
+    public static final String H2_URL = 'jdbc:h2:/tmp/h2'
 
     Sql sql = Sql.newInstance([url: H2_URL, user: 'sa', password: 'sa', driver: 'org.h2.Driver'])
 

@@ -8,6 +8,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import pl.januszemotoryzacji.service.OffersDownloadService;
 import pl.januszemotoryzacji.service.OffersIdResolver;
+import pl.januszemotoryzacji.service.scheduler.DownloadScheduler;
 import pl.januszmotoryzacji.service.dao.OfferWriter;
 
 import java.util.HashMap;
@@ -31,9 +32,8 @@ public class ApplicationConfiguration {
     @Bean
     public OffersDownloadService offersDownloadService() {
         OffersDownloadService offersDownloadService = new OffersDownloadService();
-        offersDownloadService.setAccessToken(ACCESS_TOKEN);
+        offersDownloadService.setScheduler(new DownloadScheduler(ACCESS_TOKEN));
         offersDownloadService.setOffersIdResolver(offersIdResolver());
-        offersDownloadService.setOfferWriter(offerWriter());
         return offersDownloadService;
     }
 
