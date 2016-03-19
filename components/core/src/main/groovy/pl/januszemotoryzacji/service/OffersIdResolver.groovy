@@ -9,25 +9,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
 import pl.januszemotoryzacji.service.dto.AllegroOffersList;
 import pl.januszemotoryzacji.service.dto.AllegroOffersListRequest;
-import pl.januszemotoryzacji.service.dto.AllegroOffersResponse;
+import pl.januszemotoryzacji.service.dto.AllegroOffersResponse
 
-import java.rmi.server.RemoteCall;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class OffersIdResolver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OffersIdResolver.class);
-
-    @Setter
-    private ExecutorService executor;
-    @Setter
-    private String accessToken;
 
     public List<Long> loadOfferIds(int categoryId) {
 
@@ -93,4 +84,14 @@ public class OffersIdResolver {
             }
         }
     }
+
+
+    void setAccessToken(String accessToken) {
+        this.accessToken = accessToken
+    }
+
+    void setExecutor(ExecutorService executor) {
+        this.executor = executor
+    }
+
 }
