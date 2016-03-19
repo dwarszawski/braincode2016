@@ -7,6 +7,7 @@ import org.springframework.web.client.RestTemplate;
 import pl.januszemotoryzacji.carfilter.model.CarOffer;
 import pl.januszemotoryzacji.carfilter.model.CarOfferBuilder;
 import pl.januszemotoryzacji.service.dto.AllegroCarOffer;
+import pl.januszemotoryzacji.service.dto.AllegroCategoryBreadcrumb;
 import pl.januszmotoryzacji.service.dao.OfferWriter;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.function.Predicate;
 
 /**
  * Created by lbarc on 2016-03-18.
@@ -32,10 +34,8 @@ public class OffersDownloadService {
     private OffersIdResolver offersIdResolver;
     @Setter
     private OfferWriter offerWriter;
-    @Setter
-    private int mainCategoryId;
 
-    public void downloadOffers() throws ExecutionException, InterruptedException {
+    public void downloadOffers(int mainCategoryId) throws ExecutionException, InterruptedException {
         List<Long> offerIds = offersIdResolver.loadOfferIds(mainCategoryId);
 
         LOGGER.info("LOADDED {} offerIds", offerIds.size());
@@ -52,13 +52,18 @@ public class OffersDownloadService {
         for (Future<AllegroCarOffer> future : futures) {
             AllegroCarOffer allegroCarOffer = future.get();
             if (allegroCarOffer != null) {
-                LOGGER.info("Offer : {}", allegroCarOffer);
+                LOGGER.debug("Offer : {}", allegroCarOffer);
                 counter++;
 
                 try {
-                    offerWriter.insertOffer(Arrays.asList(convert(allegroCarOffer)));
+                    CarOffer converted = convert(allegroCarOffer);
+                    offerWriter.insertOffer(Arrays.asList(converted));
+                    LOGGER.info("Offer with {} {} {} inserted",
+                            converted.getMake(),
+                            converted.getModel(),
+                            converted.getModel2());
                 } catch (Exception ex) {
-                    LOGGER.error(ex.getMessage(), ex);
+                    LOGGER.warn(ex.getMessage());
                 }
             }
         }
@@ -79,9 +84,21 @@ public class OffersDownloadService {
         int yearOfProduction = Integer.valueOf(allegroCarOffer.getAttributes().stream().filter(allegroCarOfferAttribute ->
                 allegroCarOfferAttribute.getName().equalsIgnoreCase("Rok produkcji")).findFirst().get().getValues().get(0));
 
+        AllegroCategoryBreadcrumb make = allegroCarOffer.getCategories().getBreadcrumbs().stream().filter(allegroCategoryBreadcrumb ->
+                allegroCategoryBreadcrumb.getParent() == 4029).findFirst().get();
+
+        AllegroCategoryBreadcrumb model = allegroCarOffer.getCategories().getBreadcrumbs().stream().filter(allegroCategoryBreadcrumb ->
+                allegroCategoryBreadcrumb.getParent() == make.getId()).findFirst().get();
+
+        AllegroCategoryBreadcrumb model2 = allegroCarOffer.getCategories().getBreadcrumbs().stream().filter(allegroCategoryBreadcrumb ->
+                allegroCategoryBreadcrumb.getParent() == model.getId()).findFirst().get();
+
         return CarOfferBuilder.aCarOffer()
                 .withIdentity(allegroCarOffer.getId())
                 .withEndDate(allegroCarOffer.getEndingTime())
+                .withMake(make.getName())
+                .withModel(model.getName())
+                .withModel2(model2.getName())
                 .withMileage(mileage)
                 .withPower(power)
                 .withPrice(allegroCarOffer.getPrices().getBuyNow())

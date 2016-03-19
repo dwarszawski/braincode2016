@@ -88,7 +88,7 @@ public class OffersIdResolver {
                         new AllegroOffersListRequest(categoryId, accessToken, offset, limit),
                         AllegroOffersResponse.class).getBody();
             } catch (Exception ex) {
-                LOGGER.error(ex.getMessage(), ex);
+                LOGGER.warn(ex.getMessage());
                 return new AllegroOffersResponse();
             }
         }

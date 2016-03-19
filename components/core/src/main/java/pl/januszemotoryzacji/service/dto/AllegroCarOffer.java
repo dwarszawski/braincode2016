@@ -14,4 +14,5 @@ public class AllegroCarOffer {
     private Date endingTime;
     private AllegroCarOfferLocation location;
     private AllegroCarOfferPrice prices;
+    private AllegroCategory categories;
 }

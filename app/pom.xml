@@ -36,6 +36,11 @@
             <artifactId>carfilter-components-model</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>pl.janusze-motoryzacji</groupId>
+            <artifactId>carfilter-components-resource</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
 
         <dependency>
             <groupId>com.h2database</groupId>

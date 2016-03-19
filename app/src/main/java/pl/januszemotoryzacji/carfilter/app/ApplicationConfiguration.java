@@ -15,7 +15,7 @@ import java.util.concurrent.Executors;
 @Configuration
 public class ApplicationConfiguration {
 
-    private static final String ACCESS_TOKEN = "e0a328fad7c0b64897e8beb574a14b580e8176dcc5a99138f7203b10be8adce8";
+    private static final String ACCESS_TOKEN = "9f8ad215413e2b08adc11b0ea66f5eecac80d7d803a42fa7a1bdafda76067031";
 
     public OffersIdResolver offersIdResolver() {
         OffersIdResolver offersIdResolver = new OffersIdResolver();
@@ -28,8 +28,6 @@ public class ApplicationConfiguration {
     public OffersDownloadService offersDownloadService() {
         OffersDownloadService offersDownloadService = new OffersDownloadService();
         offersDownloadService.setAccessToken(ACCESS_TOKEN);
-//        offersDownloadService.setMainCategoryId(4032); /// BMW
-        offersDownloadService.setMainCategoryId(12438); /// BMW 7
         offersDownloadService.setOffersIdResolver(offersIdResolver());
         offersDownloadService.setOfferWriter(offerWriter());
         return offersDownloadService;

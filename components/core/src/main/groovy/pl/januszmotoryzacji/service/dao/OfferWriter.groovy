@@ -20,8 +20,28 @@ class OfferWriter {
        // sql.getDataSource().getConnection().setAutoCommit(false)
 
        offers.forEach {
-            sql.executeInsert("INSERT INTO OFFERS (ID, VERSION, YEAR_OF_PRODUCTION, POWER, FUEL_TYPE, PROVINCE, MILEAGE, PRICE)" +
-                    "VALUES (${it.identity}, '${it.version}', ${it.yearOfProduction}, ${it.power}, '${it.fuelType.toString()}', '${it.province}', ${it.mileage}, ${it.price})")
+            sql.executeInsert("INSERT INTO OFFERS (ID, " +
+                    "VERSION, " +
+                    "MAKE, " +
+                    "MODEL, " +
+                    "MODEL2, " +
+                    "YEAR_OF_PRODUCTION, " +
+                    "POWER, " +
+                    "FUEL_TYPE, " +
+                    "PROVINCE, " +
+                    "MILEAGE, " +
+                    "PRICE)" +
+                    "VALUES (${it.identity}, " +
+                    "'${it.version}', " +
+                    "'${it.make}', " +
+                    "'${it.model}', " +
+                    "'${it.model2}', " +
+                    "${it.yearOfProduction}, " +
+                    "${it.power}, " +
+                    "'${it.fuelType.toString()}', " +
+                    "'${it.province}', " +
+                    "${it.mileage}, " +
+                    "${it.price})")
         }
 
        // sql.getDataSource().getConnection().setAutoCommit(true)

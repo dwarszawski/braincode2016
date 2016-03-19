@@ -10,9 +10,12 @@ class OfferWriterTest extends Specification {
     Sql sql = Sql.newInstance([url: 'jdbc:h2:/tmp/h2', user: 'sa', password: 'sa', driver: 'org.h2.Driver'])
 
     def setup() {
-        sql.execute('CREATE TABLE OFFERS (' +
-                'ID INTEGER NOT NULL,' +
-                ' VERSION VARCHAR(50),' +
+         sql.execute('CREATE TABLE OFFERS (' +
+                'ID BIGINT NOT NULL,' +
+                'VERSION INTEGER,' +
+                'MAKE VARCHAR(100),' +
+                'MODEL VARCHAR(100),' +
+                'MODEL2 VARCHAR(100),' +
                 'YEAR_OF_PRODUCTION INTEGER,' +
                 'POWER VARCHAR(50),' +
                 'FUEL_TYPE VARCHAR(50),' +
@@ -21,34 +24,33 @@ class OfferWriterTest extends Specification {
                 'PRICE INTEGER)')
     }
 
-
     //ID, VERSION, YEAR_OF_PRODUCTION, POWER, FUEL_TYPE, PROVINCE, MILAGE, PRICE, END_DATE
     def 'Should insert offer into H2'() {
         given:
-            CarOffer offer = new CarOffer(
-                    identity: 1l,
-                    version: 1,
-                    make: '',
-                    model: 'Volvo',
-                    model2: 'Volvo2',
-                    yearOfProduction: 2013,
-                    fuelType: FuelType.BENZIN,
-                    province: 'Warszawa',
-                    mileage: 120000,
-                    price: 1,
-                    endDate: new Date()
-            )
-                List<CarOffer> offers = [offer]
+        CarOffer offer = new CarOffer(
+                identity: 1l,
+                version: 1,
+                make: '',
+                model: 'Volvo',
+                model2: 'V40',
+                yearOfProduction: 2013,
+                fuelType: FuelType.BENZIN,
+                province: 'Warszawa',
+                mileage: 120000,
+                price: 1,
+                endDate: new Date()
+        )
+        List<CarOffer> offers = [offer]
 
         Map<String, String> configuration = [url: 'jdbc:h2:/tmp/h2', user: 'sa', password: 'sa', driver: 'org.h2.Driver']
         OfferWriter offerWriter = new OfferWriter(configuration)
         when:
-            offerWriter.insertOffer(offers)
+        offerWriter.insertOffer(offers)
         then:
-            sql.rows("SELECT * FROM OFFERS").size() ==1
+        sql.rows("SELECT * FROM OFFERS").size() == 1
     }
 
-    def cleanup(){
+    def cleanup() {
         sql.execute("DROP TABLE OFFERS")
     }
 }
