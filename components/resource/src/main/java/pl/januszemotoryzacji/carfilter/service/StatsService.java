@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import pl.januszemotoryzacji.carfilter.dao.StatsDao;
 import pl.januszemotoryzacji.carfilter.dao.model.MakeModelView;
 import pl.januszemotoryzacji.carfilter.resource.dto.CategoryDTO;
+import pl.januszemotoryzacji.carfilter.resource.dto.MileageByProductionYearDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,4 +80,7 @@ public class StatsService {
     }
 
 
+    public List<MileageByProductionYearDTO> findMileageByProductionYear(String makeFilter, String modelFilter, String model2Filter) {
+        return statsDao.findMileageByProductionYear(makeFilter, modelFilter, model2Filter);
+    }
 }

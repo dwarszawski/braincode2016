@@ -1,6 +1,5 @@
 package pl.januszemotoryzacji.service
 
-import lombok.Setter
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.web.client.RestTemplate
@@ -14,6 +13,7 @@ import java.util.concurrent.ExecutionException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
+
 /**
  * Created by lbarc on 2016-03-18.
  */
@@ -67,31 +67,38 @@ public class OffersDownloadService {
 
     private CarOffer convert(final AllegroCarOffer allegroCarOffer) {
 
-        int mileage = Integer.valueOf(allegroCarOffer.getAttributes().stream().filter{allegroCarOfferAttribute ->
-                allegroCarOfferAttribute.getName().equalsIgnoreCase("Przebieg [km]")}.findFirst().get().getValues().get(0));
+        int mileage = Integer.valueOf(allegroCarOffer.getAttributes().stream().filter { allegroCarOfferAttribute ->
+            allegroCarOfferAttribute.getName().equalsIgnoreCase("Przebieg [km]")
+        }.findFirst().get().getValues().get(0));
 
-        int power = Integer.valueOf(allegroCarOffer.getAttributes().stream().filter{allegroCarOfferAttribute ->
-                allegroCarOfferAttribute.getName().equalsIgnoreCase("Moc [KM]")}.findFirst().get().getValues().get(0));
+        int power = Integer.valueOf(allegroCarOffer.getAttributes().stream().filter { allegroCarOfferAttribute ->
+            allegroCarOfferAttribute.getName().equalsIgnoreCase("Moc [KM]")
+        }.findFirst().get().getValues().get(0));
 
-        int yearOfProduction = Integer.valueOf(allegroCarOffer.getAttributes().stream().filter{allegroCarOfferAttribute ->
-                allegroCarOfferAttribute.getName().equalsIgnoreCase("Rok produkcji")}.findFirst().get().getValues().get(0));
+        int yearOfProduction = Integer.valueOf(allegroCarOffer.getAttributes().stream().filter { allegroCarOfferAttribute ->
+            allegroCarOfferAttribute.getName().equalsIgnoreCase("Rok produkcji")
+        }.findFirst().get().getValues().get(0));
 
-        AllegroCategoryBreadcrumb make = allegroCarOffer.getCategories().getBreadcrumbs().stream().filter{allegroCategoryBreadcrumb ->
-                allegroCategoryBreadcrumb.getParent() == 4029}.findFirst().get();
+        AllegroCategoryBreadcrumb make = allegroCarOffer.getCategories().getBreadcrumbs().stream().filter { allegroCategoryBreadcrumb ->
+            allegroCategoryBreadcrumb.getParent() == 4029
+        }.findFirst().get();
 
-        AllegroCategoryBreadcrumb model = allegroCarOffer.getCategories().getBreadcrumbs().stream().filter{allegroCategoryBreadcrumb ->
-                allegroCategoryBreadcrumb.getParent() == make.getId()}.findFirst().get();
+        AllegroCategoryBreadcrumb model = allegroCarOffer.getCategories().getBreadcrumbs().stream().filter { allegroCategoryBreadcrumb ->
+            allegroCategoryBreadcrumb.getParent() == make.getId()
+        }.findFirst().get();
 
-        AllegroCategoryBreadcrumb model2 = allegroCarOffer.getCategories().getBreadcrumbs().stream().filter{allegroCategoryBreadcrumb ->
-                allegroCategoryBreadcrumb.getParent() == model.getId()}.findFirst().get();
+        Optional<AllegroCategoryBreadcrumb> model2 = allegroCarOffer.getCategories().getBreadcrumbs().stream().filter { allegroCategoryBreadcrumb ->
+            allegroCategoryBreadcrumb.getParent() == model.getId()
+        }.findFirst();
 
         return CarOfferBuilder.aCarOffer()
                 .withIdentity(allegroCarOffer.getId())
                 .withEndDate(allegroCarOffer.getEndingTime())
                 .withMake(make.getName())
                 .withModel(model.getName())
-                .withModel2(model2.getName())
+                .withModel2(model2.isPresent() ? model2.get().getName() : "")
                 .withMileage(mileage)
+                .withProvince(allegroCarOffer.getLocation() != null ? String.valueOf(allegroCarOffer.getLocation().getStateId()) : "")
                 .withPower(power)
                 .withPrice(allegroCarOffer.getPrices().getBuyNow())
                 .withYearOfProduction(yearOfProduction)

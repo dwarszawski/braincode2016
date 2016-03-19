@@ -1,21 +1,19 @@
-package pl.januszemotoryzacji.service;
+package pl.januszemotoryzacji.service
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.client.RestTemplate;
-import pl.januszemotoryzacji.service.dto.AllegroOffersList;
-import pl.januszemotoryzacji.service.dto.AllegroOffersListRequest;
+import groovy.transform.CompileStatic
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import org.springframework.web.client.RestTemplate
+import pl.januszemotoryzacji.service.dto.AllegroOffersList
+import pl.januszemotoryzacji.service.dto.AllegroOffersListRequest
 import pl.januszemotoryzacji.service.dto.AllegroOffersResponse
 
-import java.util.concurrent.Callable;
+import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService
-import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.Future
+import java.util.concurrent.atomic.AtomicInteger
 
+@CompileStatic
 public class OffersIdResolver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OffersIdResolver.class);
@@ -63,9 +61,7 @@ public class OffersIdResolver {
         }
     }
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
+    @CompileStatic
     private static class RequestCallable implements Callable<AllegroOffersResponse> {
 
         private static final Logger LOGGER = LoggerFactory.getLogger(RequestCallable.class);
@@ -76,10 +72,18 @@ public class OffersIdResolver {
         private int offset;
         private int limit;
 
+        RequestCallable(RestTemplate restTemplate, int categoryId, String accessToken, int offset, int limit) {
+            this.restTemplate = restTemplate
+            this.categoryId = categoryId
+            this.accessToken = accessToken
+            this.offset = offset
+            this.limit = limit
+        }
+
         public AllegroOffersResponse call() throws Exception {
             try {
-                return restTemplate.postForEntity("https://api.natelefon.pl/v2/allegro/offers?" +
-                                "access_token=" + accessToken,
+                return (AllegroOffersResponse)restTemplate.postForEntity("https://api.natelefon.pl/v2/allegro/offers?" +
+                        "access_token=" + accessToken,
                         new AllegroOffersListRequest(categoryId, accessToken, offset, limit),
                         AllegroOffersResponse.class).getBody();
             } catch (Exception ex) {

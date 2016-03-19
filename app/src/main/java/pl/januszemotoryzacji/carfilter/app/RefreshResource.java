@@ -19,9 +19,6 @@ public class RefreshResource {
     @Autowired
     public OffersDownloadService offersDownloadService;
 
-    // 12438 BMW7
-    // 4032 BMW7
-
     @RequestMapping(path = "{categoryId}", method = RequestMethod.GET)
     public void refresh(@PathVariable("categoryId") Integer categoryId) throws ExecutionException, InterruptedException {
         new Thread(() -> {

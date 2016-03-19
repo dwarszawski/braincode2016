@@ -27,7 +27,7 @@ public class OfferGrabber implements Callable<AllegroCarOffer> {
                     "?" +
                     "access_token=" + accessToken, AllegroCarOffer.class).getBody();
         } catch (Exception ex) {
-            LOGGER.debug(ex.getMessage());
+            LOGGER.warn(ex.getMessage() + " for id : " + offerId);
             return null;
         }
     }

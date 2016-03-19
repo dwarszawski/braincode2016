@@ -1,7 +1,11 @@
 package pl.januszemotoryzacji.carfilter.app;
 
+import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import pl.januszemotoryzacji.service.OffersDownloadService;
 import pl.januszemotoryzacji.service.OffersIdResolver;
 import pl.januszmotoryzacji.service.dao.OfferWriter;
@@ -15,7 +19,7 @@ import java.util.concurrent.Executors;
 @Configuration
 public class ApplicationConfiguration {
 
-    private static final String ACCESS_TOKEN = "9f8ad215413e2b08adc11b0ea66f5eecac80d7d803a42fa7a1bdafda76067031";
+    private static final String ACCESS_TOKEN = "2eb2afb8928586058a9474b91e6194f71fe2d50862af7b6d7376f2b74b2bab8c";
 
     public OffersIdResolver offersIdResolver() {
         OffersIdResolver offersIdResolver = new OffersIdResolver();
@@ -41,5 +45,26 @@ public class ApplicationConfiguration {
         map.put("password", "sa");
         map.put("driver", "org.h2.Driver");
         return new OfferWriter(map);
+    }
+
+    @Bean
+    public FilterRegistrationBean corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("*");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("OPTIONS");
+        config.addAllowedMethod("HEAD");
+        config.addAllowedMethod("GET");
+        config.addAllowedMethod("PUT");
+        config.addAllowedMethod("POST");
+        config.addAllowedMethod("DELETE");
+        config.addAllowedMethod("PATCH");
+        source.registerCorsConfiguration("/**", config);
+        // return new CorsFilter(source);
+        final FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
+        bean.setOrder(0);
+        return bean;
     }
 }

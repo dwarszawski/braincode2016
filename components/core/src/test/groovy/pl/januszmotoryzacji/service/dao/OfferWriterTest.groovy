@@ -11,7 +11,9 @@ import java.time.temporal.ChronoUnit
 
 class OfferWriterTest extends Specification {
 
-    Sql sql = Sql.newInstance([url: 'jdbc:h2:/tmp/h2', user: 'sa', password: 'sa', driver: 'org.h2.Driver'])
+    public static final String H2_URL = 'jdbc:h2:mem:'
+
+    Sql sql = Sql.newInstance([url: H2_URL, user: 'sa', password: 'sa', driver: 'org.h2.Driver'])
 
     def setup() {
         sql.execute('CREATE TABLE OFFERS (' +
@@ -42,7 +44,7 @@ class OfferWriterTest extends Specification {
 
         List<CarOffer> offers = [firstOffer, secondOffer]
 
-        Map<String, String> configuration = [url: 'jdbc:h2:/tmp/h2', user: 'sa', password: 'sa', driver: 'org.h2.Driver']
+        Map<String, String> configuration = [url: H2_URL, user: 'sa', password: 'sa', driver: 'org.h2.Driver']
         OfferWriter offerWriter = new OfferWriter(configuration)
         when:
         offerWriter.insertOffer(offers)
