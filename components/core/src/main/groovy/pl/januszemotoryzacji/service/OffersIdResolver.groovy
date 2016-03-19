@@ -20,6 +20,10 @@ public class OffersIdResolver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OffersIdResolver.class);
 
+    private String accessToken;
+
+    private ExecutorService executor
+
     public List<Long> loadOfferIds(int categoryId) {
 
         try {
