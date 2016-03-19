@@ -19,7 +19,7 @@ class OfferWriter {
 
     @CompileStatic(TypeCheckingMode.SKIP)
     public void insertOffer(List<CarOffer> offers) {
-        // sql.getDataSource().getConnection().setAutoCommit(false)
+        sql.getConnection().setAutoCommit(false)
 
         offers.forEach {
             log.info("new offer to insert with id $it.identity")
@@ -37,7 +37,8 @@ class OfferWriter {
                                             new java.sql.Date(it.endDate.getTime())])
         }
 
-        // sql.getDataSource().getConnection().setAutoCommit(true)
+
+        sql.getConnection().setAutoCommit(true)
     }
 
     private String insertSql() {
